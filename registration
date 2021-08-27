@@ -1,0 +1,67 @@
+import re
+def registration():
+    print('----USER REGISTRATION----')
+    regexuser = r'[a-zA-Z0-9]{1,}@[a-zA-Z0-9]{1,}\.[a-zA-Z]{2,}'
+    while (True):
+        username=input('Enter Username: ')
+        credentials=open('credentials.txt')
+        if username in credentials.read():
+            print('Username Already Exists\n')
+        else:
+            if re.fullmatch(regexuser,username):
+                regexpass="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{5,16}$"
+                while(True):
+                    password = input('Enter Password: ')
+                    if re.fullmatch(regexpass,password):
+                        print("\nRegistration Successfull")
+                        with open('credentials.txt','a') as file:
+                            file.write('{} {}\n'.format(username,password))
+                        login()
+                        break
+                    else:
+                        print('Invalid Password')
+                break
+            else:
+                print('Invalid Username')
+    return
+
+def login():
+    print('---LOGIN----')
+    username = input('Enter Username: ')
+    file=open('credentials.txt')
+    if username in file.read():
+        file.close()
+        credentials = open('credentials.txt').readlines()
+        for i in credentials:
+            user,passw=i.split()
+            if user==username:
+                break
+        password=input('Enter Password: ')
+        if password==passw:
+            print("Login Successfull")
+        else:
+            print('Invalid Password')
+            while True:
+                log = input('Forgot Password ? press 1: ')
+                if log == '1':
+                    print('Your Password is: ' +passw)
+                    login()
+                    break
+                else:
+                    print("Invalid Entry")
+    else:
+        print("Username does not exist")
+        print("Register before Login")
+        registration()
+
+print('----WELCOME----')
+while True:
+    entry=input('Press 1 for Registration | Press 2 for Login: ')
+    if entry=='1':
+        registration()
+        break
+    elif entry=='2':
+        login()
+        break
+    else:
+        print('Invalid Entry')
